@@ -1,58 +1,63 @@
+// array to hold user input for book information
 let myLibrary = [];
 
+// vars for html element selection
+const $title = document.querySelector('#title');
+const $author = document.querySelector('#author');
+const $status = document.querySelector('#status');
+const form = document.querySelector('form').addEventListener('submit', (e) => {
+  // form submition event
+  addBook();
+  render();
+  clearForm();
+});
+
 class book {
-  constructor(title, author, pages, read) {
+  constructor(title, author, status) {
     this.title = title;
     this.author = author;
-    this.pages = pages;
-    this.read = read;
+    this.status = status;
   }
 }
 
-function createBook(item) {
-  let library = document.querySelector('#library-container');
-  let bookDiv = document.createElement('div');
-  let titleDiv = document.createElement('div');
-  let authDiv = document.createElement('div');
-  let pageDiv = document.createElement('div');
-  let removeBtn = document.createElement('button');
-  let readBtn = document.createElement('button');
-
-  bookDiv.classList.add('book');
-  bookDiv.setAttribute('id', myLibrary.indexOf(item));
-
-  titleDiv.textContent = item.title;
-  titleDiv.classList.add('title');
-  bookDiv.appendChild(titleDiv);
-
-  authDiv.textContent = item.author;
-  authDiv.classList.add('author');
-  bookDiv.appendChild(titleDiv);
-
-  pageDiv.textContent = item.pages;
-  pageDiv.classList.add('pages');
-
-  readBtn.classList.add('read-btn');
-  bookDiv.appendChild(readBtn);
-  if (item.read === false) {
-    readBtn.textContent = 'Unread';
-    readBtn.style.backgroundColor = '#e04f63';
-  } else {
-    readBtn.textContent = 'Read';
-    readBtn.style.backgroundColor = '#63da63';
+function addBook() {
+  if ($title.value.length === 0 || $author.value.length === 0) {
+    alert('Please fill in missing fields!');
+    return;
   }
 
-  removeBtn.textContent = 'Remove';
-  removeBtn.setAttribute('id', 'remove-btn');
-  bookDiv.appendChild(removeBtn);
+  const newBook = new book($title.value, $author.value, $status.value);
 
-  library.appendChild(bookDiv);
+  myLibrary.push(newBook);
+  updateStorage();
+}
 
-  removeBtn.addEventListener('click', () => {
-    myLibrary.spliace(myLibrary.indexOf(item), 1);
-  });
+function changeStatus($book) {
+  if (myLibrary[$book].status === 'read') {
+    myLibrary[$book].status = 'not read';
+  } else myLibrary[$book].status = 'read';
+}
 
-  readBtn.addEventListener('click', () => {
-    item.read = !item.read;
-  });
+function deleteBook(current) {
+  myLibrary.splice(current, current + 1);
+}
+
+function findBook(libArray, title) {
+  if (libArray.length === 0 || libArray === numm) {
+    return;
+  }
+  for ($book of libArray) {
+    if ($book.title === title) {
+      return libArray.indexOf($book);
+    }
+  }
+}
+
+function clearForm() {
+  $title.value = '';
+  $author.value = '';
+}
+
+function updateStorage() {
+  localStorage.setItem('myLibrary', JSON.stringify(myLibrary));
 }
